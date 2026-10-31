@@ -60,3 +60,13 @@ button:disabled {
   background: #fee2e2;
   color: #991b1b;
 }
+
+.field-error {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #ef4444;
+}
+
+input[aria-invalid="true"] {
+  border-color: #ef4444;
+}

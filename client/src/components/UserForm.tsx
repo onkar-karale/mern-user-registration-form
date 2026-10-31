@@ -1,6 +1,8 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const MIN_AGE = 18;
+const MAX_AGE = 120;
 
 type FormState = {
   name: string;
@@ -24,15 +26,35 @@ const UserForm = () => {
   const [form, setForm] = useState<FormState>(initialForm);
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
+  const [ageError, setAgeError] = useState(""); // saved message; replaces ageTouched
+
+  // Returns an error message, or "" if the age is fine. Called on blur and on submit.
+  const checkAge = (): string => {
+    if (form.age === "") return "";
+
+    const age = Number(form.age);
+    if (age < MIN_AGE)
+      return `You must be at least ${MIN_AGE} years old to register.`;
+    if (age > MAX_AGE) return "Please enter a valid age.";
+    return "";
+  };
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    if (e.target.name === "age") setAgeError(""); // hide the message while the user types
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const error = checkAge();
+    if (error) {
+      setAgeError(error); // show it and stop
+      return;
+    }
+
     setStatus("loading");
     setMessage("");
 
@@ -51,6 +73,7 @@ const UserForm = () => {
       setStatus("success");
       setMessage("Saved to MongoDB Atlas!");
       setForm(initialForm); // clear the form
+      setAgeError("");
     } catch (err) {
       setStatus("error");
       setMessage(
@@ -66,6 +89,7 @@ const UserForm = () => {
           Name
           <input
             name="name"
+            placeholder=" "
             value={form.name}
             onChange={handleChange}
             required
@@ -77,6 +101,7 @@ const UserForm = () => {
           <input
             name="email"
             type="email"
+            placeholder=" "
             value={form.email}
             onChange={handleChange}
             required
@@ -88,12 +113,14 @@ const UserForm = () => {
           <input
             name="age"
             type="number"
-            min={1}
-            max={120}
+            placeholder=" "
             value={form.age}
             onChange={handleChange}
+            onBlur={() => setAgeError(checkAge())} // validate only when the user leaves the field
+            aria-invalid={ageError !== ""}
             required
           />
+          {ageError && <span className="field-error">{ageError}</span>}
         </label>
 
         <label>
@@ -101,6 +128,7 @@ const UserForm = () => {
           <input
             name="phone"
             type="tel"
+            placeholder=" "
             value={form.phone}
             onChange={handleChange}
           />
@@ -111,6 +139,7 @@ const UserForm = () => {
           <textarea
             name="address"
             rows={3}
+            placeholder=" "
             value={form.address}
             onChange={handleChange}
             required
