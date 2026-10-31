@@ -5,8 +5,8 @@ import submissionRoutes from "./routes/userRoutes";
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:5173" })); // allow ONLY the Vite dev server
-app.use(express.json()); // parses JSON bodies into req.body
+app.use(cors({ origin: "http://localhost:5173" }));
+app.use(express.json());
 
 app.get("/health", (_req, res) => {
   const connected = mongoose.connection.readyState === 1;
@@ -15,6 +15,6 @@ app.get("/health", (_req, res) => {
     .json({ database: connected ? "connected" : "not connected" });
 });
 
-app.use("/api/submissions", submissionRoutes); // mount the new router
+app.use("/api/submissions", submissionRoutes);
 
 export default app;

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 import { IUser, Submission } from "../models/User";
+import { sendSubmissionEmail } from "../services/emailService";
 
 // POST /api/submissions: save one form entry
 export const createSubmission = async (
@@ -10,6 +11,11 @@ export const createSubmission = async (
   try {
     // Fields not in the schema are silently dropped, so users can't inject extra data
     const submission = await Submission.create(req.body);
+    try {
+      await sendSubmissionEmail(submission);
+    } catch (mailErr) {
+      console.error("Email failed:", mailErr); // log it, but don't fail the request
+    }
     res.status(201).json(submission); // 201 = Created
   } catch (err) {
     if (err instanceof mongoose.Error.ValidationError) {

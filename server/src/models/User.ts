@@ -22,7 +22,7 @@ const submissionSchema = new Schema<IUser>(
     age: {
       type: Number,
       required: [true, "Age is required"],
-      min: [1, "Age must be at least 1"],
+      min: [18, "Age must be at least 18 years old"],
       max: [120, "Age must be 120 or less"],
     },
     phone: { type: String, trim: true },

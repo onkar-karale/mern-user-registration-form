@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration received</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 24px;
+      background: #f4f5f7;
+      font-family: Arial, sans-serif;
+    "
+  >
+    <div
+      style="
+        max-width: 480px;
+        margin: auto;
+        padding: 24px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+      "
+    >
+      <h2 style="color: #4f46e5; margin-top: 0">
+        Thanks for registering, {{name}}!
+      </h2>
+      <p>We received your details. Here is what you submitted:</p>
+
+      <table style="width: 100%; font-size: 14px">
+        <tr>
+          <td><b>Email</b></td>
+          <td>{{email}}</td>
+        </tr>
+        <tr>
+          <td><b>Age</b></td>
+          <td>{{age}}</td>
+        </tr>
+        <tr>
+          <td><b>Address</b></td>
+          <td>{{address}}</td>
+        </tr>
+        {{#phone}}
+        <tr>
+          <td><b>Phone</b></td>
+          <td>{{phone}}</td>
+        </tr>
+        {{/phone}}
+      </table>
+
+      <p style="color: #64748b; font-size: 12px">
+        &copy; {{year}} Registration Team
+      </p>
+    </div>
+  </body>
+</html>
